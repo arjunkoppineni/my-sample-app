@@ -15,7 +15,7 @@ pipeline {
 
         stage('Build Application') {
             steps {
-                dir('my-sample-app/backend') {
+                dir('myapp/backend') {
                     sh 'npm install'
                     sh 'npm test || echo "No tests found"'
                 }
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dir('my-sample-app/backend') {
+                dir('myapp/backend') {
                     script {
                         dockerImage = docker.build("${IMAGE_NAME}:latest")
                     }
@@ -44,7 +44,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                dir('my-sample-app/kubernetes') {
+                dir('myapp/kubernetes') {
                     sh 'kubectl apply -f deployment.yaml'
                     sh 'kubectl apply -f service.yaml'
                 }
