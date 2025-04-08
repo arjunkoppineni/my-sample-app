@@ -42,17 +42,17 @@ pipeline {
             }
         }
 
-        // stage('Deploy to Kubernetes') {
-        //     steps {
-        //         withKubeConfig([credentialsId: 'kubernetes-token']) {
-        //             dir('myapp/kubernetes') {
-        //                 sh 'kubectl apply -f deployment.yaml'
-        //                 sh 'kubectl apply -f service.yaml'
-        //                 sh 'kubectl rollout status deployment my-sample-app-deployment'
-        //                 sh 'kubectl get pods'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Deploy to Kubernetes') {
+             steps {
+                 withKubeConfig([credentialsId: 'kubernetes-token']) {
+                     dir('myapp/kubernetes') {
+                         sh 'kubectl apply -f deployment.yaml'
+                         sh 'kubectl apply -f service.yaml'
+                         sh 'kubectl rollout status deployment my-sample-app-deployment'
+                         sh 'kubectl get pods'
+                     }
+                 }
+             }
+         }
     }
 }
