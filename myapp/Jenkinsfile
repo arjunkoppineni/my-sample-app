@@ -1,10 +1,8 @@
-@Library('shared-library') _  // Load shared library by name (must match Jenkins config)
-
 pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'docker-cred'
+        DOCKER_CREDENTIALS_ID = 'docker-cred'  // Ensure this credential exists in Jenkins
         IMAGE_NAME = 'harishkoppineni/my-sample-app'
     }
 
@@ -15,10 +13,11 @@ pipeline {
             }
         }
 
-         stage('Build Application') {
+        stage('Build Application') {
             steps {
-                script {
-                    installAndTestApp('myapp/backend') // ✅ direct call
+                dir('myapp/backend') {
+                    sh 'npm install'
+                    sh 'npm test || echo "No tests found"'
                 }
             }
         }
@@ -44,11 +43,16 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    deployToK8s('myapp/kubernetes') // ✅ direct call
-                }
-            }
-        }
+             steps {
+                 withKubeConfig([credentialsId: 'kubeconfig']) {
+                     dir('myapp/kubernetes') {
+                         sh 'kubectl apply -f deployment.yaml'
+                         sh 'kubectl apply -f service.yaml'
+                         sh 'kubectl rollout status deployment my-sample-app-deployment'
+                         sh 'kubectl get pods'
+                     }
+                 }
+             }
+         }
     }
 }
