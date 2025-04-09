@@ -1,4 +1,4 @@
-@Library('shared-library') _  // Load the shared library
+@Library('shared-library') _  // Load shared library by name (must match Jenkins config)
 
 pipeline {
     agent any
@@ -15,7 +15,13 @@ pipeline {
             }
         }
 
-       
+        stage('Build Application') {
+            steps {
+                script {
+                    commonSteps.installAndTestApp('myapp/backend')  // ← shared lib usage
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -40,7 +46,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    commonSteps.deployToK8s('myapp/kubernetes')  // 🧠 USING shared lib
+                    commonSteps.deployToK8s('myapp/kubernetes')  // ← shared lib usage
                 }
             }
         }
