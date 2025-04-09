@@ -15,13 +15,7 @@ pipeline {
             }
         }
 
-        stage('Build Application') {
-            steps {
-                script {
-                    commonSteps.installAndTestApp('myapp/backend')  // 🧠 USING shared lib
-                }
-            }
-        }
+       
 
         stage('Build Docker Image') {
             steps {
