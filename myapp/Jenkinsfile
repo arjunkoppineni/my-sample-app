@@ -15,10 +15,10 @@ pipeline {
             }
         }
 
-        stage('Build Application') {
+         stage('Build Application') {
             steps {
                 script {
-                    commonSteps.installAndTestApp('myapp/backend')  // ← shared lib usage
+                    installAndTestApp('myapp/backend') // ✅ direct call
                 }
             }
         }
@@ -46,7 +46,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    commonSteps.deployToK8s('myapp/kubernetes')  // ← shared lib usage
+                    deployToK8s('myapp/kubernetes') // ✅ direct call
                 }
             }
         }
